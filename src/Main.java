@@ -19,7 +19,6 @@ public class Main {
     // Метод для добавления задач в менеджер задач
     private static void addTasks() {
 //        // Создаем экземпляр менеджера задач
-//        TaskManager taskManager = new TaskManager();
 
         // Создаем задачу "Приготовить суп" с описанием
         Task washFloor = new Task("Приготовить суп", "С новым соусом");

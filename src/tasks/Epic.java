@@ -21,12 +21,13 @@ public class Epic extends Task {
     }
 
     // Метод для добавления подзадачи к списку подзадач
-    public void addSubtask(Subtask subtask) {
-        subtaskList.add(subtask.getId());
-    }
 
     public void addSubtaskById(int subtaskId) {
         subtaskList.add(subtaskId); // Добавление id подзадачи
+    }
+
+    public void deleteSubtaskById(int subtaskId) {
+        subtaskList.remove(Integer.valueOf(subtaskId)); // Удаление id подзадачи из списка
     }
 
 

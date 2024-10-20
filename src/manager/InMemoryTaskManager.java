@@ -191,18 +191,28 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Метод для удаления подзадачи по идентификатору
+//    @Override
+//    public void deleteSubtaskByID(int id) {
+//        Subtask subtask = subtasks.get(id); // Получаем подзадачу по идентификатору
+//        int epicID = subtask.getEpicID(); // Получаем идентификатор эпика
+//        subtasks.remove(id); // Удаляем подзадачу
+//        // Обновляем список подзадач и статус эпика
+//        Epic epic = epics.get(epicID);
+//        List<Integer> subtaskList = epic.getSubtaskList();
+//        subtaskList.remove(subtask); // Удаляем подзадачу из списка подзадач эпика
+//        epic.setSubtaskList(subtaskList); // Устанавливаем обновленный список подзадач
+//        updateEpicStatus(epic); // Обновляем статус эпика
+//
+//    }
+
     @Override
     public void deleteSubtaskByID(int id) {
-        Subtask subtask = subtasks.get(id); // Получаем подзадачу по идентификатору
-        int epicID = subtask.getEpicID(); // Получаем идентификатор эпика
-        subtasks.remove(id); // Удаляем подзадачу
-        // Обновляем список подзадач и статус эпика
+        Subtask subtask = subtasks.get(id);
+        int epicID = subtask.getEpicID();
+        subtasks.remove(id);
         Epic epic = epics.get(epicID);
-        List<Integer> subtaskList = epic.getSubtaskList();
-        subtaskList.remove(subtask); // Удаляем подзадачу из списка подзадач эпика
-        epic.setSubtaskList(subtaskList); // Устанавливаем обновленный список подзадач
-        updateEpicStatus(epic); // Обновляем статус эпика
-
+        epic.deleteSubtaskById(id); // Теперь вызываем метод удаления подзадачи из эпика
+        updateEpicStatus(epic);
     }
 
     @Override
