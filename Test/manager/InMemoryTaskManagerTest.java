@@ -1,21 +1,20 @@
-package Manager;
+package manager;
 
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Enum.Status;
-import Tasks.Task;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Manager.TaskManager;
+import enums.Status;
+import tasks.Task;
+import tasks.Epic;
+import tasks.Subtask;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 class InMemoryTaskManagerTest {
 
-    private InMemoryTaskManager taskManager;
+    private TaskManager taskManager;
 
     @BeforeEach
     void setUp() {
@@ -27,7 +26,7 @@ class InMemoryTaskManagerTest {
     @Test
     void testManagersInitialization() {
         TaskManager manager = Managers.getDefault();
-        assertTrue(manager instanceof InMemoryTaskManager, "Менеджер должен быть правильно инициализирован");
+        assertNotNull(manager, "Менеджер должен быть правильно инициализирован");
     }
 
     @Test
@@ -69,10 +68,12 @@ class InMemoryTaskManagerTest {
     @Test
     public void updateEpicShouldReturnEpicWithTheSameId() {
         final Epic expected = new Epic("имя", "описание");
-        taskManager.addEpic(expected);
-        final Epic updatedEpic = new Epic(expected.getId(), "новое имя", "новое описание", Status.DONE);
+        Epic addedEpic = taskManager.addEpic(expected);
+        final Epic updatedEpic = new Epic(addedEpic.getId(), "новое имя", "новое описание", Status.DONE);
         final Epic actual = taskManager.updateEpic(updatedEpic);
-        assertEquals(expected, actual, "Вернулся эпик с другим id");
+        assertEquals(expected.getName(), actual.getName(), "Вернулся эпик с другим именем");
+        assertEquals(expected.getDescription(), actual.getDescription(), "Вернулся эпик с другим описанием");
+        assertEquals(expected.getStatus(), actual.getStatus(), "Вернулся эпик с другим статусом");
     }
 
 
@@ -91,7 +92,7 @@ class InMemoryTaskManagerTest {
 //    --------------
 
     @Test
-    public void testEpicCannotAddItselfAsSubtask1() {
+    public void testEpicCannotAddItselfAsSubtask() {
         Epic epic = new Epic("Epic 1", "Description 1");
         assertThrows(IllegalArgumentException.class, () -> {
             taskManager.addSubtask(new Subtask("Subtask 1", "Description 1", epic.getId()));

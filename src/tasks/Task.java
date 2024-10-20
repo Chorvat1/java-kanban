@@ -1,7 +1,7 @@
-package Tasks;
+package tasks;
 
 // Класс Task - базовый класс для задач
-import Enum.Status;
+import enums.Status;
 import java.util.Objects;
 
 public class Task {

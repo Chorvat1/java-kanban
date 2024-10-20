@@ -1,18 +1,14 @@
-package Manager;
+package manager;
 
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 // Класс Manager.TaskManager для управления задачами, эпиками и подзадачами
 
 import java.util.*;
 
 public interface TaskManager {
-
-
-    // Метод для получения следующего уникального идентификатора
-    int getNextID();
 
 
     // Метод для добавления новой задачи
@@ -64,13 +60,13 @@ public interface TaskManager {
     void deleteSubtasks();
 
     // Метод для удаления задачи по идентификатору
-    public Object deleteTaskByID(int id);
+    public void deleteTaskByID(int id);
 
     // Метод для удаления эпика по идентификатору
     void deleteEpicByID(int id);
 
     // Метод для удаления подзадачи по идентификатору
-    Object deleteSubtaskByID(int id);
+    void deleteSubtaskByID(int id);
 
     List<Task> getHistory(); // Новый метод для получения истории просмотров
 }

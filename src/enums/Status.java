@@ -1,4 +1,4 @@
-package Enum;
+package enums;
 
 // Перечисление статусов задачи
 public enum Status {

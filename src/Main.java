@@ -1,9 +1,9 @@
-import Enum.Status;
-import Tasks.Task;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Manager.TaskManager;
-import Manager.Managers;
+import enums.Status;
+import tasks.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import manager.TaskManager;
+import manager.Managers;
 
 public class Main {
     // Создаем инстанс менеджера задач для хранения задач в памяти

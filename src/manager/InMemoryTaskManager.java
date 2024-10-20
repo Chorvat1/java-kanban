@@ -1,9 +1,9 @@
-package Manager;
+package manager;
 
-import Enum.Status;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
+import enums.Status;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.*;
 
@@ -26,25 +26,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Метод для получения следующего уникального идентификатора
-    @Override
+
     public int getNextID() {
         return nextID++;
     }
 
     // Метод для добавления новой задачи
-     @Override
+    @Override
     public Task addTask(Task task) {
         task.setId(getNextID()); // Установка идентификатора
         tasks.put(task.getId(), task); // Добавление задачи в мапу
         return task;
     }
-//    @Override
-//    public Task addTask(Task task) {
-//        int id = getNextID(); // Получаем уникальный идентификатор
-//        Task newTask = new Task(task.getName(), task.getDescription());
-//        tasks.put(newTask.getId(), newTask); // Добавляем новую задачу в мапу
-//        return newTask;
-//    }
 
     // Метод для добавления нового эпика
     @Override
@@ -59,50 +52,21 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask addSubtask(Subtask subtask) {
         subtask.setId(getNextID()); // Установка идентификатора
         Epic epic = epics.get(subtask.getEpicID()); // Получаем эпик для подзадачи
-        epic.addSubtask(subtask); // Добавляем подзадачу в эпик
+        epic.addSubtaskById(subtask.getId()); // Используем новый метод для добавления
         subtasks.put(subtask.getId(), subtask); // Добавляем подзадачу в мапу подзадач
         updateEpicStatus(epic); // Обновляем статус эпика
         return subtask;
     }
-//    public Subtask addSubtask(Subtask subtask) {
-//        // Check if the epic exists
-//        Epic epic = epics.get(subtask.getEpicID());
-//        if (epic == null) {
-//            throw new IllegalArgumentException("Epic not found.");
-//        }
-//
-//        // Ensure epic cannot add itself as a subtask
-//        if (epic.getId() == subtask.getEpicID()) {
-//            throw new IllegalArgumentException("Epic cannot add itself as a subtask");
-//        }
-//
-//        subtask.setId(getNextID()); // Установка уникального идентификатора
-//        epic.addSubtask(subtask); // Добавляем подзадачу в эпик
-//        subtasks.put(subtask.getId(), subtask); // Добавляем подзадачу в мапу подзадач
-//        updateEpicStatus(epic); // Обновляем статус эпика
-//        return subtask;
-//    }
 
-    // Метод для обновления существующей задачи
-//    @Override
-//    public Task updateTask(Task task) {
-//        int taskID = task.getId(); // Получаем идентификатор задачи
-//        if (!tasks.containsKey(taskID)) {
-//            return null; // Если идентификатор не существует, возвращаем null
-//        }
-//        tasks.replace(taskID, task); // Обновляем задачу в мапе
-//        return task;
-//    }
     @Override
     public Task updateTask(Task task) {
         int taskID = task.getId(); // Получаем идентификатор задачи
         if (!tasks.containsKey(taskID)) {
             return null; // Если идентификатор не существует, возвращаем null
         }
-        Task existingTask = tasks.get(taskID);
-        Task updatedTask = new Task(task.getName(), task.getDescription());
-        tasks.replace(taskID, updatedTask);
-        return updatedTask;
+        // Создаем обновленную задачу с сохранением статуса
+        tasks.replace(taskID, new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus()));
+        return tasks.get(taskID);
     }
 
     // Метод для обновления существующего эпика
@@ -114,6 +78,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         // обновляем название и описание эпика
         Epic existingEpic = epics.get(epicID);
+        existingEpic.setName(epic.getName()); // Обновляем название
         existingEpic.setDescription(epic.getDescription());
         // статус и список подзадач остаются без изменений
         return existingEpic;
@@ -126,24 +91,11 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subtasks.containsKey(subtaskID)) {
             return null; // Если идентификатор не существует, возвращаем null
         }
-        int epicID = subtask.getEpicID(); // Получаем идентификатор эпика
-        Subtask oldSubtask = subtasks.get(subtaskID); // Получаем старую подзадачу
-        subtasks.replace(subtaskID, subtask); // Обновляем подзадачу в мапе
-        // Обновляем подзадачу в списке подзадач эпика и проверяем статус эпика
-        Epic epic = epics.get(epicID);
-        List<Integer> subtaskList = epic.getSubtaskList();
-        subtaskList.remove((Integer) oldSubtask.getId()); // Удаляем старую подзадачу
-        subtaskList.add(subtask.getId()); // Добавляем обновленную подзадачу
-        epic.setSubtaskList(subtaskList); // Устанавливаем новый список подзадач
-        updateEpicStatus(epic); // Обновляем статус эпика
+        subtasks.replace(subtaskID, subtask);
+        Epic epic = epics.get(subtask.getEpicID());
+        updateEpicStatus(epic);
         return subtask;
     }
-
-    // Метод для получения задачи по идентификатору
-//    @Override
-//    public Task getTaskByID(int id) {
-//        return tasks.get(id); // Возвращаем задачу по идентификатору
-//    }
 
     @Override
     public Task getTaskByID(int id) {
@@ -163,7 +115,11 @@ public class InMemoryTaskManager implements TaskManager {
     // Метод для получения подзадачи по идентификатору
     @Override
     public Subtask getSubtaskByID(int id) {
-        return subtasks.get(id); // Возвращаем подзадачу по идентификатору
+        Subtask subtask = subtasks.get(id);
+        if (subtask != null) {
+            historyManager.add(subtask); // Добавляем в историю, если подзадача найдена
+        }
+        return subtask;
     }
 
     // Метод для получения всех задач
@@ -219,9 +175,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Метод для удаления задачи по идентификатору
     @Override
-    public Object deleteTaskByID(int id) {
+    public void deleteTaskByID(int id) {
+        List<Integer> epicSubtaskIDs = epics.get(id).getSubtaskList(); // Получаем ID подзадач
         tasks.remove(id); // Удаляем задачу по идентификатору
-        return null;
     }
 
     // Метод для удаления эпика по идентификатору
@@ -236,7 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Метод для удаления подзадачи по идентификатору
     @Override
-    public Object deleteSubtaskByID(int id) {
+    public void deleteSubtaskByID(int id) {
         Subtask subtask = subtasks.get(id); // Получаем подзадачу по идентификатору
         int epicID = subtask.getEpicID(); // Получаем идентификатор эпика
         subtasks.remove(id); // Удаляем подзадачу
@@ -246,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskList.remove(subtask); // Удаляем подзадачу из списка подзадач эпика
         epic.setSubtaskList(subtaskList); // Устанавливаем обновленный список подзадач
         updateEpicStatus(epic); // Обновляем статус эпика
-        return null;
+
     }
 
     @Override

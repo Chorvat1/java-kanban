@@ -1,13 +1,13 @@
-package Tasks;
+package tasks;
 
-import Manager.InMemoryTaskManager;
-import Manager.Managers;
+import manager.InMemoryTaskManager;
+import manager.Managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Enum.Status;
+import enums.Status;
 
 class EpicTest {
 

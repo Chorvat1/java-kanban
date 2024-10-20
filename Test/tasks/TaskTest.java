@@ -1,15 +1,11 @@
-package Tasks;
+package tasks;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Enum.Status;
-import Manager.*;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
-import Enum.Status;
+import enums.Status;
+import manager.*;
 import org.junit.jupiter.api.*;
 
 class TaskTest {

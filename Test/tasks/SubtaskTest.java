@@ -1,10 +1,10 @@
-package Tasks;
+package tasks;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Enum.Status;
-import Manager.InMemoryTaskManager;
-import Manager.Managers;
+import enums.Status;
+import manager.InMemoryTaskManager;
+import manager.Managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +18,9 @@ class SubtaskTest {
     }
 
     @Test
-    void testEpicAndSubtaskEqualityById() {
+    void testSubtaskEqualityById() {
         Subtask subtask1 = new Subtask(2,"Subtask1", "description1", Status.DONE,5);
-        Subtask subtask2 = new Subtask(2,"Subtask2", "description2",Status.NEW,2);
+        Subtask subtask2 = new Subtask(2,"Subtask2", "description2",Status.NEW,5);
         taskManager.addTask(subtask1);
         taskManager.addTask(subtask2);
 

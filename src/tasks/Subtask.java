@@ -1,6 +1,9 @@
-package Tasks;
+package tasks;
 
-import Enum.Status;
+import enums.Status;
+
+import java.util.Objects;
+
 // Класс Subtask, расширяющий функциональность задачи (Task)
 public class Subtask extends Task {
     private final int epicID; // ID связанного эпика
@@ -32,5 +35,22 @@ public class Subtask extends Task {
                 ", epicID=" + epicID +
                 ", status=" + getStatus() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Subtask subtask = (Subtask) object;
+        return getId() == subtask.getId() &&
+                epicID == subtask.epicID &&
+                Objects.equals(getName(), subtask.getName()) &&
+                Objects.equals(getDescription(), subtask.getDescription());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), epicID);
     }
 }

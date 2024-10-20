@@ -1,8 +1,10 @@
-package Tasks;
+package tasks;
 
-import Enum.Status;
+import enums.Status;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // Класс Epic, расширяющий функциональность задачи (Task)
 public class Epic extends Task {
@@ -22,6 +24,11 @@ public class Epic extends Task {
     public void addSubtask(Subtask subtask) {
         subtaskList.add(subtask.getId());
     }
+
+    public void addSubtaskById(int subtaskId) {
+        subtaskList.add(subtaskId); // Добавление id подзадачи
+    }
+
 
     // Метод для очистки списка подзадач
     public void clearSubtasks() {
@@ -48,6 +55,22 @@ public class Epic extends Task {
                 ", subtaskList.size = " + subtaskList.size() +
                 ", status = " + getStatus() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Epic epic = (Epic) object;
+        return getId() == epic.getId() &&
+                Objects.equals(getName(), epic.getName()) &&
+                Objects.equals(getDescription(), epic.getDescription());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription());
     }
 }
 
